@@ -11,6 +11,7 @@ import (
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
 	"github.com/caddyserver/caddy/v2/modules/caddyhttp"
+	"go.uber.org/zap"
 	"golang.org/x/net/webdav"
 )
 
@@ -30,6 +31,7 @@ type WebDAV struct {
 	Root string `json:"root,omitempty"`
 
 	lockSystem webdav.LockSystem
+	logger     *zap.Logger
 }
 
 // CaddyModule returns the Caddy module information.
@@ -41,11 +43,14 @@ func (WebDAV) CaddyModule() caddy.ModuleInfo {
 }
 
 // Provision sets up the module.
-func (wd *WebDAV) Provision(_ caddy.Context) error {
+func (wd *WebDAV) Provision(ctx caddy.Context) error {
+	wd.logger = ctx.Logger(wd)
+
 	wd.lockSystem = webdav.NewMemLS()
 	if wd.Root == "" {
 		wd.Root = "{http.vars.root}"
 	}
+
 	return nil
 }
 
@@ -60,6 +65,12 @@ func (wd WebDAV) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhtt
 	wdHandler := webdav.Handler{
 		FileSystem: webdav.Dir(root),
 		LockSystem: wd.lockSystem,
+		Logger: func(req *http.Request, err error) {
+			wd.logger.Error("internal handler error",
+				zap.Error(err),
+				zap.Object("request", caddyhttp.LoggableHTTPRequest{Request: req}),
+			)
+		},
 	}
 
 	// Excerpt from RFC4918, section 9.4:
