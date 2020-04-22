@@ -38,6 +38,15 @@ func (wd *WebDAV) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 					return d.Err("root path already specified")
 				}
 				wd.Root = d.Val()
+			case "prefix":
+				if wd.Prefix != "" {
+					return d.Err("prefix already specified")
+				}
+				if !d.NextArg() {
+					return d.ArgErr()
+				}
+
+				wd.Prefix = d.Val()
 			default:
 				return d.Errf("unrecognized subdirective: %s", d.Val())
 			}

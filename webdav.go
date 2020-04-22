@@ -30,6 +30,18 @@ type WebDAV struct {
 	// Accepts placeholders.
 	Root string `json:"root,omitempty"`
 
+	// The base path prefix used to access the WebDAV share.
+	// Should be used if one more more matchers are used with the
+	// webdav directive and it's needed to let the webdav share know
+	// what the request base path will be.
+	// For example:
+	// webdav /some/path/match/* {
+	//   prefix /some/path/match
+	//   ...
+	// }
+	// Accepts placeholders.
+	Prefix string `json:"prefix,omitempty"`
+
 	lockSystem webdav.LockSystem
 	logger     *zap.Logger
 }
@@ -61,8 +73,10 @@ func (wd WebDAV) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhtt
 
 	repl := r.Context().Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
 	root := repl.ReplaceAll(wd.Root, ".")
+	prefix := repl.ReplaceAll(wd.Prefix, "")
 
 	wdHandler := webdav.Handler{
+		Prefix:     prefix,
 		FileSystem: webdav.Dir(root),
 		LockSystem: wd.lockSystem,
 		Logger: func(req *http.Request, err error) {
