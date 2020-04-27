@@ -5,7 +5,6 @@ package webdav
 
 import (
 	"context"
-	"log"
 	"net/http"
 
 	"github.com/caddyserver/caddy/v2"
@@ -16,10 +15,7 @@ import (
 )
 
 func init() {
-	err := caddy.RegisterModule(WebDAV{})
-	if err != nil {
-		log.Fatal(err)
-	}
+	caddy.RegisterModule(WebDAV{})
 }
 
 // WebDAV implements an HTTP handler for responding to WebDAV clients.
