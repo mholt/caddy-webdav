@@ -76,10 +76,12 @@ func (wd WebDAV) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhtt
 		FileSystem: webdav.Dir(root),
 		LockSystem: wd.lockSystem,
 		Logger: func(req *http.Request, err error) {
-			wd.logger.Error("internal handler error",
-				zap.Error(err),
-				zap.Object("request", caddyhttp.LoggableHTTPRequest{Request: req}),
-			)
+			if err != nil {
+				wd.logger.Error("internal handler error",
+					zap.Error(err),
+					zap.Object("request", caddyhttp.LoggableHTTPRequest{Request: req}),
+				)
+			}
 		},
 	}
 
