@@ -32,8 +32,8 @@ type WebDAV struct {
 	// what the request base path will be.
 	// For example:
 	// webdav /some/path/match/* {
+	//   root /path
 	//   prefix /some/path/match
-	//   ...
 	// }
 	// Accepts placeholders.
 	Prefix string `json:"prefix,omitempty"`
