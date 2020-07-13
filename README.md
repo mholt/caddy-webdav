@@ -10,6 +10,7 @@ Requires Caddy 2+.
 ```
 webdav [<matcher>] {
 	root <path>
+	prefix <request-base-path>
 }
 ```
 
@@ -21,6 +22,18 @@ Because this directive does not come standard with Caddy, you need to [put the d
 }
 ```
 
+The `prefix` directive is optional but has to be used if a webdav share is used in
+combination with matchers or path manipulations. This is because webdav uses
+absolute paths in its response. There exist a similar issue when using reverse
+proxies, see
+[The "subfolder problem", OR, "why can't I reverse proxy my app into a subfolder?"](https://caddy.community/t/the-subfolder-problem-or-why-cant-i-reverse-proxy-my-app-into-a-subfolder/8575).
+
+```
+webdav /some/path/match/* {
+  root /path
+  prefix /some/path/match
+}
+```
 
 ## Credit
 
