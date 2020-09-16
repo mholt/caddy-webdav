@@ -14,11 +14,27 @@ webdav [<matcher>] {
 }
 ```
 
-Because this directive does not come standard with Caddy, you need to [put the directive in order](https://caddyserver.com/docs/caddyfile/options). The correct place is up to you, but usually putting it at the end works if no other terminal directives match the same requests:
+Because this directive does not come standard with Caddy, you need to [put the directive in order](https://caddyserver.com/docs/caddyfile/options). The correct place is up to you, but usually putting it near the end works if no other terminal directives match the same requests. It's common to pair a webdav handler with a `file_server`, so ordering it just before is often a good choice:
 
 ```
 {
-	order webdav last
+	order webdav before file_server
+}
+```
+
+Alternatively, you may use `route` to order it the way you want. For example:
+
+```
+localhost
+
+root * /srv
+
+route {
+	rewrite /dav /dav/
+	webdav /dav/* {
+		prefix /dav
+	}
+	file_server
 }
 ```
 
@@ -30,8 +46,8 @@ proxies, see
 
 ```
 webdav /some/path/match/* {
-  root /path
-  prefix /some/path/match
+	root /path
+	prefix /some/path/match
 }
 ```
 
