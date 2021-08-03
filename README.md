@@ -51,6 +51,38 @@ webdav /some/path/match/* {
 }
 ```
 
+If you want to serve WebDAV and directory listing under same path, e.g. similer behaviour as in Apache and Nginx, you may use [Request Matchers](https://caddyserver.com/docs/caddyfile/matchers) to filter out GET request and pass it to [file_server](https://caddyserver.com/docs/caddyfile/directives/file_server).
+
+Example with authenticated WebDAV and directory listing under the same path:
+
+```
+@notget {
+    not method GET
+}
+route {
+    basicauth {
+        username hashed_password_base64
+    }
+    webdav @notget
+    file_server browse
+}
+```
+
+Or, if you want to create a public listing, but keep WebDAV behind authentication:
+
+```
+@notget {
+    not method GET
+}
+route @notget {
+    basicauth {
+        username hashed_password_base64
+    }
+    webdav
+}
+file_server browse
+```
+
 ## Credit
 
 Special thanks to @hacdias for making caddy-webdav for Caddy 1, from which this work is derived: https://github.com/hacdias/caddy-webdav
