@@ -51,7 +51,7 @@ webdav /some/path/match/* {
 }
 ```
 
-If you want to serve WebDAV and directory listing under same path, e.g. similer behaviour as in Apache and Nginx, you may use [Request Matchers](https://caddyserver.com/docs/caddyfile/matchers) to filter out GET request and pass it to [file_server](https://caddyserver.com/docs/caddyfile/directives/file_server).
+If you want to serve WebDAV and directory listing under same path (similar behaviour as in Apache and Nginx), you may use [Request Matchers](https://caddyserver.com/docs/caddyfile/matchers) to filter out GET requests and pass those to [file_server](https://caddyserver.com/docs/caddyfile/directives/file_server).
 
 Example with authenticated WebDAV and directory listing under the same path:
 
