@@ -38,11 +38,7 @@ route {
 }
 ```
 
-The `prefix` directive is optional but has to be used if a webdav share is used in
-combination with matchers or path manipulations. This is because webdav uses
-absolute paths in its response. There exist a similar issue when using reverse
-proxies, see
-[The "subfolder problem", OR, "why can't I reverse proxy my app into a subfolder?"](https://caddy.community/t/the-subfolder-problem-or-why-cant-i-reverse-proxy-my-app-into-a-subfolder/8575).
+The `prefix` directive is optional but has to be used if a webdav share is used in combination with matchers or path manipulations. This is because webdav uses absolute paths in its response. There exist a similar issue when using reverse proxies, see [The "subfolder problem", OR, "why can't I reverse proxy my app into a subfolder?"](https://caddy.community/t/the-subfolder-problem-or-why-cant-i-reverse-proxy-my-app-into-a-subfolder/8575).
 
 ```
 webdav /some/path/match/* {
@@ -56,24 +52,22 @@ If you want to serve WebDAV and directory listing under same path (similar behav
 Example with authenticated WebDAV and directory listing under the same path:
 
 ```
-@notget {
-    not method GET
-}
+@get method GET
+
 route {
     basicauth {
         username hashed_password_base64
     }
-    webdav @notget
-    file_server browse
+    file_server @get browse
+    webdav
 }
 ```
 
 Or, if you want to create a public listing, but keep WebDAV behind authentication:
 
 ```
-@notget {
-    not method GET
-}
+@notget not method GET
+
 route @notget {
     basicauth {
         username hashed_password_base64
