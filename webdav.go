@@ -91,8 +91,8 @@ func (wd WebDAV) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhtt
 	//     "index.html" resource, a human-readable view of the contents of
 	//     the collection, or something else altogether.
 	//
-	// Get, when applied to a collection, will return the same as PROPFIND method.
-	if r.Method == http.MethodGet {
+	// GET and HEAD, when applied to a collection, will behave the same as PROPFIND method.
+	if r.Method == http.MethodGet || r.Method == http.MethodHead {
 		info, err := wdHandler.FileSystem.Stat(context.TODO(), r.URL.Path)
 		if err == nil && info.IsDir() {
 			r.Method = "PROPFIND"
