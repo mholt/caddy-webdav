@@ -3,7 +3,9 @@ WebDAV for Caddy
 
 This package implements a simple WebDAV handler module for Caddy.
 
-Requires Caddy 2+.
+> [!NOTE]
+> This is not an official repository of the [Caddy Web Server](https://github.com/caddyserver) organization.
+
 
 ## Syntax
 
