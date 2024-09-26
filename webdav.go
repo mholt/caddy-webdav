@@ -19,6 +19,8 @@ package webdav
 
 import (
 	"context"
+	"errors"
+	"io/fs"
 	"net/http"
 
 	"github.com/caddyserver/caddy/v2"
@@ -90,12 +92,18 @@ func (wd WebDAV) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhtt
 		FileSystem: webdav.Dir(root),
 		LockSystem: wd.lockSystem,
 		Logger: func(req *http.Request, err error) {
-			if err != nil {
-				wd.logger.Error("internal handler error",
-					zap.Error(err),
-					zap.Object("request", caddyhttp.LoggableHTTPRequest{Request: req}),
-				)
+			if err == nil {
+				return
 			}
+			// ignore errors about non-exsiting files
+			if errors.Is(err, fs.ErrNotExist) {
+				return
+			}
+
+			wd.logger.Error("internal handler error",
+				zap.Error(err),
+				zap.Object("request", caddyhttp.LoggableHTTPRequest{Request: req}),
+			)
 		},
 	}
 
