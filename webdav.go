@@ -95,8 +95,19 @@ func (wd WebDAV) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhtt
 			if err == nil {
 				return
 			}
-			// ignore errors about non-exsiting files
+			// ignore errors about non-existing files
 			if errors.Is(err, fs.ErrNotExist) {
+				return
+			}
+			// log webdav request errors at debug level
+			if errors.Is(err, webdav.ErrConfirmationFailed) ||
+				errors.Is(err, webdav.ErrForbidden) ||
+				errors.Is(err, webdav.ErrLocked) ||
+				errors.Is(err, webdav.ErrNoSuchLock) {
+				wd.logger.Debug("webdav request error",
+					zap.Error(err),
+					zap.Object("request", caddyhttp.LoggableHTTPRequest{Request: req}),
+				)
 				return
 			}
 
