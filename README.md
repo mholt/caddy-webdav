@@ -52,7 +52,7 @@ If you want to serve WebDAV and directory listing under same path (similar behav
 Example with authenticated WebDAV and directory listing under the same path:
 
 ```
-@get method GET
+@get method GET HEAD
 
 route {
     basicauth {
@@ -66,7 +66,7 @@ route {
 Or, if you want to create a public listing, but keep WebDAV behind authentication:
 
 ```
-@notget not method GET
+@notget not method GET HEAD
 
 route @notget {
     basicauth {
