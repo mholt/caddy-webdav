@@ -1,11 +1,13 @@
 module github.com/mholt/caddy-webdav
 
-go 1.21
+go 1.23.0
+
+toolchain go1.24.5
 
 require (
 	github.com/caddyserver/caddy/v2 v2.5.2
-	go.uber.org/zap v1.21.0
-	golang.org/x/net v0.29.0
+	go.uber.org/zap v1.27.0
+	golang.org/x/net v0.42.0
 )
 
 require (
@@ -93,14 +95,14 @@ require (
 	go.step.sm/cli-utils v0.7.0 // indirect
 	go.step.sm/crypto v0.16.1 // indirect
 	go.step.sm/linkedca v0.15.0 // indirect
-	go.uber.org/atomic v1.9.0 // indirect
-	go.uber.org/multierr v1.6.0 // indirect
-	golang.org/x/crypto v0.27.0 // indirect
-	golang.org/x/mod v0.17.0 // indirect
-	golang.org/x/sys v0.25.0 // indirect
-	golang.org/x/term v0.24.0 // indirect
-	golang.org/x/text v0.18.0 // indirect
-	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
+	go.uber.org/multierr v1.10.0 // indirect
+	golang.org/x/crypto v0.40.0 // indirect
+	golang.org/x/mod v0.25.0 // indirect
+	golang.org/x/sync v0.16.0 // indirect
+	golang.org/x/sys v0.34.0 // indirect
+	golang.org/x/term v0.33.0 // indirect
+	golang.org/x/text v0.27.0 // indirect
+	golang.org/x/tools v0.34.0 // indirect
 	google.golang.org/genproto v0.0.0-20220502173005-c8bf987b8c21 // indirect
 	google.golang.org/grpc v1.46.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
