@@ -5,6 +5,20 @@ This package implements a simple WebDAV handler module for Caddy.
 > [!NOTE]
 > This is not an official repository of the [Caddy Web Server](https://github.com/caddyserver) organization.
 
+## Compiling
+
+The recommended way is to use [xcaddy](https://github.com/caddyserver/xcaddy):
+
+```sh
+xcaddy build --with github.com/mholt/caddy-webdav
+```
+
+Alternatively ou can clone and build and run like this:
+
+1. Clone `git clone https://github.com/mholt/caddy-webdav.git`
+2. In the project folder, run `xcaddy` just like you would run `caddy`.
+   For example: `xcaddy list-modules` and you should see the `webdav` modules.
+
 ## Syntax
 
 ```
