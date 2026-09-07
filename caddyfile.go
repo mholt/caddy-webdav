@@ -38,6 +38,9 @@ func parseWebdav(h httpcaddyfile.Helper) (caddyhttp.MiddlewareHandler, error) {
 //
 //	webdav [<matcher>] {
 //	    root <path>
+//	    prefix <path>
+//	    atomic_upload
+//	    temp_file_dir <path>
 //	}
 func (wd *WebDAV) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	for d.Next() {
@@ -63,6 +66,22 @@ func (wd *WebDAV) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 				}
 
 				wd.Prefix = d.Val()
+			case "atomic_upload":
+				if wd.AtomicUpload {
+					return d.Err("atomic upload already specified")
+				}
+				if d.NextArg() {
+					return d.ArgErr()
+				}
+				wd.AtomicUpload = true
+			case "temp_file_dir":
+				if wd.TempFileDir != "" {
+					return d.Err("temp file dir already specified")
+				}
+				if !d.NextArg() {
+					return d.ArgErr()
+				}
+				wd.TempFileDir = d.Val()
 			default:
 				return d.Errf("unrecognized subdirective: %s", d.Val())
 			}
