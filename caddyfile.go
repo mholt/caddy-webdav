@@ -38,6 +38,8 @@ func parseWebdav(h httpcaddyfile.Helper) (caddyhttp.MiddlewareHandler, error) {
 //
 //	webdav [<matcher>] {
 //	    root <path>
+//	    prefix <path>
+//	    create_dirs
 //	}
 func (wd *WebDAV) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 	for d.Next() {
@@ -63,6 +65,8 @@ func (wd *WebDAV) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
 				}
 
 				wd.Prefix = d.Val()
+			case "create_dirs":
+				wd.CreateDirs = true
 			default:
 				return d.Errf("unrecognized subdirective: %s", d.Val())
 			}

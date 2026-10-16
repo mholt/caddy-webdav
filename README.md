@@ -100,3 +100,16 @@ Additionally, if running caddy via a systemd, it may be necessary to add the sto
 ## Credit
 
 Special thanks to @hacdias for making caddy-webdav for Caddy 1, from which this work is derived: https://github.com/hacdias/caddy-webdav
+
+## Creating the parent directories
+
+By default a `PUT` into a collection that does not exist is refused (RFC 4918 section 9.7.1 asks for 409 Conflict). With `create_dirs` the missing parent directories are made.
+The name is cleaned as an absolute path first, so a `..` in it cannot make a directory outside the root.
+
+```
+webdav [<matcher>] {
+    root /data
+    create_dirs
+}
+```
+

@@ -22,6 +22,8 @@ import (
 	"errors"
 	"io/fs"
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"github.com/caddyserver/caddy/v2"
 	"github.com/caddyserver/caddy/v2/caddyconfig/caddyfile"
@@ -53,6 +55,10 @@ type WebDAV struct {
 	// }
 	// Accepts placeholders.
 	Prefix string `json:"prefix,omitempty"`
+
+	// CreateDirs makes the missing parent directories of an object that a PUT creates. RFC 4918 section 9.7.1 asks for 409 (Conflict) when the parent
+	// collection does not exist, and that stays the default. The name of the object is cleaned as an absolute path first, so that a `..` cannot leave the root.
+	CreateDirs bool `json:"create_dirs,omitempty"`
 
 	lockSystem webdav.LockSystem
 	logger     *zap.Logger
@@ -137,6 +143,16 @@ func (wd WebDAV) ServeHTTP(w http.ResponseWriter, r *http.Request, next caddyhtt
 
 	if r.Method == http.MethodHead {
 		w = emptyBodyResponseWriter{w}
+	}
+
+	if r.Method == http.MethodPut && wd.CreateDirs {
+		if _, full, ok := resolve(root, prefix, r.URL.Path); ok {
+			if err := os.MkdirAll(filepath.Dir(full), 0o755); err != nil {
+				wd.logger.Error("failed to create the parent directories", zap.Error(err))
+				http.Error(w, "Failed to create directories", http.StatusInternalServerError)
+				return nil
+			}
+		}
 	}
 
 	wdHandler.ServeHTTP(w, r)
